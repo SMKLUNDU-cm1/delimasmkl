@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Semakan ID DELIMa – SMK Lundu</title>
+<title>Semakan ID DELIMA – SMK Lundu</title>
 <link rel="icon" href="https://drive.google.com/thumbnail?id=1Zrkv42oKLawd_FrlpUP0pDKm1EYh7s0g&sz=w64">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -272,9 +272,9 @@ function loadSheet() {
   });
 }
 const val = c => (c && c.v != null) ? String(c.v).trim() : '';
-const tingkatanOf = k => k === 'P' ? 'Peralihan' : k.startsWith('KHAM') ? 'Tingkatan Pendidikan Khas'
+const tingkatanOf = k => k === 'P' ? 'Peralihan' : k.startsWith('KHAM') ? 'Pendidikan Khas'
   : /^T[1-6]/.test(k) ? 'Tingkatan ' + k[1] : 'Lain-lain';
-const urutan = t => t === 'Peralihan' ? 0 : /^Tingkatan \d$/.test(t) ? +t.slice(-1) : t === 'Tingkatan Pendidikan Khas' ? 7 : 8;
+const urutan = t => t === 'Peralihan' ? 0 : /^Tingkatan \d$/.test(t) ? +t.slice(-1) : t === 'Pendidikan Khas' ? 7 : 8;
 
 async function init() {
   popupLoading();
