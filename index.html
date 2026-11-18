@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Semakan ID DELIMa – SMK Lundu</title>
+<link rel="icon" href="https://drive.google.com/thumbnail?id=1Zrkv42oKLawd_FrlpUP0pDKm1EYh7s0g&sz=w64">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Warna tema diambil automatik daripada logo sekolah. Nilai di bawah ialah warna ganti. */
+  --h1:190; --h2:320;
+  --c1:hsl(var(--h1) 100% 58%); --c2:hsl(var(--h2) 100% 62%);
+  --g1:hsl(var(--h1) 100% 58% / .55); --g2:hsl(var(--h2) 100% 62% / .55);
+  --bg:hsl(var(--h1) 55% 5%); --panel:hsl(var(--h1) 45% 9% / .86);
+  --text:#e8f6ff; --muted:hsl(var(--h1) 20% 68%);
+  --warn:#ffd23f; --err:#ff3b5c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:'Rajdhani',system-ui,sans-serif;font-weight:600;font-size:18px;color:var(--text);
+  background:
+    radial-gradient(900px 500px at 15% -10%,var(--g1),transparent 60%),
+    radial-gradient(800px 500px at 100% 110%,var(--g2),transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+  display:flex;justify-content:center;padding:28px 16px 48px;
+  padding-top:max(28px,env(safe-area-inset-top));
+}
+body::before{ /* grid */
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;
+  background-image:linear-gradient(var(--c1) 1px,transparent 1px),linear-gradient(90deg,var(--c1) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:linear-gradient(to bottom,transparent,#000 40%,transparent);
+}
+main{position:relative;width:100%;max-width:520px}
+header{text-align:center;margin-bottom:22px}
+.logo{
+  width:104px;height:104px;border-radius:50%;object-fit:contain;padding:8px;
+  background:#fff;border:2px solid var(--c1);
+  box-shadow:0 0 18px var(--g1),0 0 44px var(--g2);
+  animation:pulse 3.2s ease-in-out infinite;
+}
+@keyframes pulse{50%{box-shadow:0 0 28px var(--g1),0 0 70px var(--g2)}}
+h1{
+  font-family:'Orbitron',sans-serif;font-weight:800;font-size:clamp(22px,6vw,30px);
+  margin:16px 0 4px;letter-spacing:.04em;color:var(--c1);
+  text-shadow:0 0 8px var(--g1),0 0 22px var(--g1),2px 0 var(--g2);
+}
+.sub{color:var(--muted);margin:0;font-size:17px;letter-spacing:.06em}
+.panel{
+  background:var(--panel);border:1px solid var(--c1);border-radius:14px;padding:22px 20px;
+  box-shadow:0 0 0 1px #000 inset,0 0 26px var(--g1),0 0 60px -10px var(--g2);
+  backdrop-filter:blur(6px);
+}
+.field{margin-bottom:18px;position:relative}
+label{display:flex;align-items:center;gap:10px;margin-bottom:7px;color:var(--c1);font-size:17px}
+.n{
+  display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;font-family:'Orbitron';font-size:12px;
+  color:#000;background:var(--c1);box-shadow:0 0 10px var(--g1)
+}
+select,input{
+  width:100%;font:inherit;color:var(--text);background:hsl(var(--h1) 50% 4%);
+  border:1.5px solid hsl(var(--h1) 60% 35%);border-radius:10px;padding:12px 14px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+select:focus,input:focus{border-color:var(--c1);box-shadow:0 0 0 3px var(--g1)}
+select:disabled,input:disabled{opacity:.4;cursor:not-allowed}
+option{background:#06111a}
+.list{
+  position:absolute;left:0;right:0;top:100%;margin-top:6px;z-index:20;max-height:230px;overflow:auto;
+  background:hsl(var(--h1) 50% 6%);border:1.5px solid var(--c2);border-radius:10px;box-shadow:0 0 22px var(--g2);display:none;
+}
+.list.open{display:block}
+.list div{padding:10px 14px;cursor:pointer;border-bottom:1px solid hsl(var(--h1) 40% 14%)}
+.list div:last-child{border:0}
+.list div:hover,.list div.act{background:var(--g2);color:#fff}
+.list .none{cursor:default;color:var(--muted)}
+.btn{
+  font:inherit;font-family:'Orbitron';font-weight:600;font-size:15px;letter-spacing:.12em;cursor:pointer;
+  border:2px solid var(--c2);color:#fff;background:transparent;border-radius:10px;padding:13px 22px;
+  box-shadow:0 0 16px var(--g2),inset 0 0 14px var(--g2);transition:transform .15s,background .2s;
+}
+.btn:hover{background:var(--g2);transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn.main{width:100%;margin-top:4px}
+.btn.alt{border-color:var(--c1);box-shadow:0 0 14px var(--g1),inset 0 0 12px var(--g1)}
+.btn.alt:hover{background:var(--g1)}
+:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+.notice{
+  margin-top:18px;display:flex;gap:12px;align-items:flex-start;padding:13px 15px;border-radius:12px;
+  border:1px dashed var(--warn);background:rgba(255,210,63,.07);color:#ffe9a0;font-size:16.5px;line-height:1.35
+}
+.notice svg{flex:none;width:22px;height:22px;margin-top:1px}
+footer{text-align:center;margin-top:20px;color:var(--muted);font-size:14px;letter-spacing:.05em}
+
+/* Popup */
+.overlay{
+  position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;
+  background:rgba(2,6,12,.78);backdrop-filter:blur(5px);
+}
+.overlay.show{display:grid}
+.modal{
+  --mc:var(--c1);--mg:var(--g1);
+  width:100%;max-width:440px;text-align:center;padding:26px 22px 22px;border-radius:16px;
+  background:hsl(var(--h1) 50% 7%);border:2px solid var(--mc);
+  box-shadow:0 0 30px var(--mg),0 0 80px -10px var(--mg);animation:pop .25s ease-out;
+}
+.modal.warn{--mc:var(--warn);--mg:rgba(255,210,63,.45)}
+.modal.err{--mc:var(--err);--mg:rgba(255,59,92,.5)}
+@keyframes pop{from{transform:scale(.9);opacity:0}}
+.ico{width:62px;height:62px;margin:0 auto 10px;color:var(--mc);filter:drop-shadow(0 0 10px var(--mg))}
+.modal h2{font-family:'Orbitron';font-size:19px;margin:0 0 10px;color:var(--mc);text-shadow:0 0 12px var(--mg)}
+.modal p{margin:0 0 12px;line-height:1.4}
+.card{margin:14px 0;padding:14px;border-radius:12px;background:#000;border:1px solid var(--mc);text-align:left}
+.card small{display:block;color:var(--muted);font-size:14px;letter-spacing:.08em}
+.card b{display:block;font-size:19px;margin-bottom:10px;word-break:break-word}
+.card b:last-child{margin:0}
+.card .id{font-family:ui-monospace,Consolas,monospace;font-size:17px;color:var(--c1);text-shadow:0 0 8px var(--g1)}
+.mnote{font-size:15.5px;color:#ffe9a0;padding:10px 12px;border-radius:10px;border:1px dashed var(--warn);margin:0 0 14px;text-align:left}
+.acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.acts .btn{flex:1;min-width:130px;padding:12px 14px;font-size:13px}
+.pick{max-height:240px;overflow:auto;text-align:left;margin:0 0 14px}
+.pick button{
+  display:block;width:100%;text-align:left;font:inherit;color:var(--text);cursor:pointer;margin-bottom:8px;
+  background:#000;border:1px solid var(--c1);border-radius:10px;padding:10px 12px
+}
+.pick button:hover{background:var(--g1)}
+.spin{
+  width:56px;height:56px;margin:0 auto 14px;border-radius:50%;
+  border:4px solid hsl(var(--h1) 40% 18%);border-top-color:var(--c1);border-right-color:var(--c2);
+  animation:rot 0.9s linear infinite;box-shadow:0 0 18px var(--g1)
+}
+@keyframes rot{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img id="logo" class="logo" alt="Logo SMK Lundu" src="logo.png">
+    <h1>SEMAKAN ID DELIMa</h1>
+    <p class="sub">SMK Lundu</p>
+  </header>
+
+  <section class="panel" aria-label="Borang semakan">
+    <div class="field">
+      <label for="tkt"><span class="n">1</span>Tingkatan</label>
+      <select id="tkt" disabled><option value="">Memuatkan data…</option></select>
+    </div>
+    <div class="field">
+      <label for="kls"><span class="n">2</span>Kelas</label>
+      <select id="kls" disabled><option value="">Pilih tingkatan dahulu</option></select>
+    </div>
+    <div class="field">
+      <label for="nama"><span class="n">3</span>Nama</label>
+      <input id="nama" type="text" autocomplete="off" placeholder="Taip atau pilih nama anda" disabled>
+      <div class="list" id="list" role="listbox"></div>
+    </div>
+    <button class="btn main" id="cari" type="button">CARI</button>
+
+    <div class="notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>
+      <span>Jika terdapat kesilapan pada maklumat atau rekod anda tidak dijumpai, sila maklumkan kepada <b>guru kelas</b>.</span>
+    </div>
+  </section>
+  <footer>Akaun DELIMa Pelajar SMK Lundu</footer>
+</main>
+
+<div class="overlay" id="ov" aria-live="polite"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt"></div></div>
+
+<script>
+const SHEET_ID = '1URo-Rgw-xeaKT7gh6bu7bP3WCTFxFblpJAOoMy-LHCw';
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let DATA = [], picked = null, modalOnClose = null;
+
+/* ---------- Ikon popup ---------- */
+const ICON = {
+  ok:  '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m7.5 12.5 3 3 6-7"/></svg>',
+  warn:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17.5v.01"/></svg>',
+  err: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 9 6 6M15 9l-6 6"/></svg>',
+  find:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/></svg>'
+};
+
+/* ---------- Popup (semua popup guna komponen ini) ---------- */
+function popup({type='ok', icon, title, body='', actions=[], onClose=null, dismissable=true}) {
+  const m = $('modal');
+  m.className = 'modal ' + (type === 'ok' ? '' : type);
+  m.innerHTML = (icon || ICON[type] || ICON.ok) + `<h2 id="mt">${title}</h2>` + body +
+    (actions.length ? '<div class="acts"></div>' : '');
+  actions.forEach(a => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn ' + (a.alt ? 'alt' : ''); b.textContent = a.label;
+    b.onclick = () => a.run ? a.run(b) : closePopup();
+    m.querySelector('.acts').appendChild(b);
+  });
+  $('ov').dataset.dismiss = dismissable ? '1' : '';
+  modalOnClose = onClose;
+  $('ov').classList.add('show');
+  const f = m.querySelector('.acts .btn, .pick button'); if (f) f.focus();
+}
+function closePopup() {
+  $('ov').classList.remove('show');
+  if (modalOnClose) { const f = modalOnClose; modalOnClose = null; f(); }
+}
+$('ov').addEventListener('mousedown', e => { if (e.target === $('ov') && $('ov').dataset.dismiss) closePopup(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('ov').classList.contains('show') && $('ov').dataset.dismiss) closePopup(); });
+
+function popupLoading() {
+  popup({type:'ok', icon:'<div class="spin"></div>', title:'Memuatkan data…',
+    body:'<p>Sila tunggu sebentar.</p>', dismissable:false});
+}
+function popupLoadError() {
+  popup({type:'err', title:'Data tidak dapat dimuatkan',
+    body:'<p>Sila semak sambungan internet dan cuba lagi. Jika masalah berterusan, maklumkan kepada guru anda.</p>',
+    actions:[{label:'CUBA LAGI', run: () => init()}], dismissable:false});
+}
+function popupMissing(msg) {
+  popup({type:'warn', title:'Maklumat belum lengkap', body:`<p>${msg}</p>`, actions:[{label:'OK'}]});
+}
+function popupNotFound(q) {
+  popup({type:'err', icon:ICON.find, title:'Rekod tidak dijumpai',
+    body:`<p>Tiada nama yang sepadan dengan “${esc(q)}” dalam kelas ini.</p>
+          <p class="mnote">Sila semak ejaan nama atau maklumkan kepada <b>guru kelas</b> untuk semakan lanjut.</p>`,
+    actions:[{label:'CUBA LAGI'}]});
+}
+function popupResult(s) {
+  popup({type:'ok', title:'Rekod dijumpai',
+    body:`<div class="card"><small>NAMA</small><b>${esc(s.nama)}</b>
+          <small>KELAS</small><b>${esc(s.kelas)}</b>
+          <small>ID DELIMa</small><b class="id">${esc(s.id)}</b></div>
+          <p class="mnote">Jika terdapat kesilapan pada maklumat di atas, sila maklumkan kepada <b>guru kelas</b>.</p>`,
+    actions:[
+      {label:'SALIN ID', alt:true, run: b => copy(s.id, b)},
+      {label:'TUTUP'}
+    ]});
+}
+function popupPick(list) {
+  popup({type:'ok', icon:ICON.find, title:'Pilih nama anda',
+    body:`<p>${list.length} nama sepadan. Sila pilih satu.</p><div class="pick" id="pick"></div>`,
+    actions:[{label:'BATAL'}]});
+  list.forEach(s => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = s.nama;
+    b.onclick = () => { $('nama').value = s.nama; picked = s; popupResult(s); };
+    $('pick').appendChild(b);
+  });
+}
+function copy(text, btn) {
+  const done = () => { btn.textContent = 'DISALIN ✓'; setTimeout(() => btn.textContent = 'SALIN ID', 1800); };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, () => fallback());
+  else fallback();
+  function fallback() {
+    const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); done(); } catch (e) {} t.remove();
+  }
+}
+
+/* ---------- Muat data dari Google Sheet (JSONP, boleh dihos di GitHub Pages) ---------- */
+function loadSheet() {
+  return new Promise((resolve, reject) => {
+    const cb = '__dl' + Date.now(), s = document.createElement('script');
+    const end = () => { clearTimeout(t); delete window[cb]; s.remove(); };
+    const t = setTimeout(() => { end(); reject(); }, 20000);
+    window[cb] = r => { end(); (r && r.status === 'ok') ? resolve(r.table.rows) : reject(); };
+    s.onerror = () => { end(); reject(); };
+    s.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&tq=` +
+            encodeURIComponent('select A,B,I,J');
+    document.head.appendChild(s);
+  });
+}
+const val = c => (c && c.v != null) ? String(c.v).trim() : '';
+const tingkatanOf = k => k === 'P' ? 'Peralihan' : k.startsWith('KHAM') ? 'Tingkatan Pendidikan Khas'
+  : /^T[1-6]/.test(k) ? 'Tingkatan ' + k[1] : 'Lain-lain';
+const urutan = t => t === 'Peralihan' ? 0 : /^Tingkatan \d$/.test(t) ? +t.slice(-1) : t === 'Tingkatan Pendidikan Khas' ? 7 : 8;
+
+async function init() {
+  popupLoading();
+  try {
+    const rows = await loadSheet();
+    DATA = rows.map(r => r.c ? { id: val(r.c[0]), nama: val(r.c[1]), kelas: val(r.c[2]).replace(/\s+/g, ' '), kod: val(r.c[3]).toUpperCase() } : null)
+               .filter(s => s && s.nama && s.kelas)
+               .map(s => ({...s, tkt: tingkatanOf(s.kod)}));
+    if (!DATA.length) throw 0;
+    const tk = [...new Set(DATA.map(s => s.tkt))].sort((a, b) => urutan(a) - urutan(b));
+    fill($('tkt'), tk, 'Pilih tingkatan');
+    $('tkt').disabled = false;
+    $('ov').dataset.dismiss = '1'; closePopup();
+  } catch (e) { popupLoadError(); }
+}
+function fill(sel, items, ph) {
+  sel.innerHTML = `<option value="">${ph}</option>` + items.map(i => `<option>${esc(i)}</option>`).join('');
+}
+
+/* ---------- Penapis ---------- */
+$('tkt').onchange = () => {
+  const k = [...new Set(DATA.filter(s => s.tkt === $('tkt').value).map(s => s.kelas))].sort((a, b) => a.localeCompare(b, 'ms', {numeric:true}));
+  fill($('kls'), k, k.length ? 'Pilih kelas' : 'Pilih tingkatan dahulu');
+  $('kls').disabled = !k.length; resetNama();
+};
+$('kls').onchange = () => { resetNama(); $('nama').disabled = !$('kls').value; };
+function resetNama() { $('nama').value = ''; $('nama').disabled = true; picked = null; closeList(); }
+
+const classNames = () => DATA.filter(s => s.kelas === $('kls').value).sort((a, b) => a.nama.localeCompare(b.nama));
+let act = -1;
+function renderList() {
+  const q = $('nama').value.trim().toUpperCase();
+  const items = classNames().filter(s => s.nama.toUpperCase().includes(q));
+  const L = $('list'); L.innerHTML = ''; act = -1;
+  if (!items.length) L.innerHTML = '<div class="none">Tiada padanan dalam kelas ini</div>';
+  items.forEach(s => {
+    const d = document.createElement('div'); d.textContent = s.nama; d.setAttribute('role', 'option');
+    d.onmousedown = e => { e.preventDefault(); $('nama').value = s.nama; picked = s; closeList(); };
+    L.appendChild(d);
+  });
+  L.classList.add('open');
+}
+function closeList() { $('list').classList.remove('open'); }
+$('nama').addEventListener('focus', () => { if (!$('nama').disabled) renderList(); });
+$('nama').addEventListener('input', () => { picked = null; renderList(); });
+$('nama').addEventListener('blur', closeList);
+$('nama').addEventListener('keydown', e => {
+  const opts = [...$('list').querySelectorAll('div:not(.none)')];
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault(); if (!$('list').classList.contains('open')) renderList();
+    act = (act + (e.key === 'ArrowDown' ? 1 : -1) + opts.length) % (opts.length || 1);
+    opts.forEach((o, i) => o.classList.toggle('act', i === act));
+    if (opts[act]) opts[act].scrollIntoView({block:'nearest'});
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (act >= 0 && opts[act]) opts[act].onmousedown(e); else search();
+  }
+});
+
+/* ---------- Cari ---------- */
+function search() {
+  closeList();
+  if (!$('tkt').value) return popupMissing('Sila pilih <b>tingkatan</b> dahulu.');
+  if (!$('kls').value) return popupMissing('Sila pilih <b>kelas</b>.');
+  const q = $('nama').value.trim();
+  if (!q) return popupMissing('Sila taip atau pilih <b>nama</b> anda.');
+  if (picked) return popupResult(picked);
+  const Q = q.toUpperCase(), pool = classNames();
+  const exact = pool.filter(s => s.nama.toUpperCase() === Q);
+  const hits = exact.length ? exact : pool.filter(s => s.nama.toUpperCase().includes(Q));
+  if (!hits.length) return popupNotFound(q);
+  if (hits.length === 1) { $('nama').value = hits[0].nama; return popupResult(hits[0]); }
+  popupPick(hits);
+}
+$('cari').onclick = search;
+
+/* ---------- Sumber logo: fail dalam repo dahulu, kemudian Google Drive ---------- */
+const LOGO_ID = '1Zrkv42oKLawd_FrlpUP0pDKm1EYh7s0g';
+const LOGO_SRC = ['logo.png', `https://lh3.googleusercontent.com/d/${LOGO_ID}=w200`,
+                  `https://drive.google.com/thumbnail?id=${LOGO_ID}&sz=w200`];
+let logoTry = 0;
+$('logo').addEventListener('error', () => {
+  if (++logoTry < LOGO_SRC.length) $('logo').src = LOGO_SRC[logoTry];
+});
+
+/* ---------- Warna tema daripada logo ---------- */
+$('logo').addEventListener('load', () => {
+  try {
+    const c = document.createElement('canvas'), n = 64; c.width = c.height = n;
+    const x = c.getContext('2d'); x.drawImage($('logo'), 0, 0, n, n);
+    const px = x.getImageData(0, 0, n, n).data, B = new Array(12).fill(0);
+    for (let i = 0; i < px.length; i += 4) {
+      if (px[i+3] < 200) continue;
+      const r = px[i]/255, g = px[i+1]/255, b = px[i+2]/255, mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+      const l = (mx+mn)/2, d = mx-mn; if (d < .05) continue;
+      const s = d / (1 - Math.abs(2*l - 1)); if (s < .4 || l < .15 || l > .88) continue;
+      let h = mx === r ? ((g-b)/d) % 6 : mx === g ? (b-r)/d + 2 : (r-g)/d + 4; h = (h*60 + 360) % 360;
+      B[Math.floor(h/30) % 12] += s;
+    }
+    const order = B.map((w, i) => [w, i]).sort((a, b) => b[0] - a[0]);
+    if (order[0][0] < 5) return;
+    const h1 = order[0][1]*30 + 15;
+    const second = order.find(([w, i]) => w > order[0][0]*.12 && Math.min(Math.abs(i*30+15-h1), 360-Math.abs(i*30+15-h1)) >= 50);
+    const h2 = second ? second[1]*30 + 15 : (h1 + 150) % 360;
+    document.documentElement.style.setProperty('--h1', h1);
+    document.documentElement.style.setProperty('--h2', h2);
+  } catch (e) { /* kekal warna ganti */ }
+});
+
+init();
+</script>
+</body>
+</html>
